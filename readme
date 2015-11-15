@@ -1,0 +1,9 @@
+The command is
+./tsp_sequential <input file>
+
+Don't put white space between the values and the delimiters
+The format of the input file is:
+
+List of node names
+node name;neighbor,distance;neighbor,distance; ...
+node name: ...
