@@ -1,2 +1,3 @@
 *.o
 *.swp
+tsp_sequential
