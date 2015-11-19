@@ -12,18 +12,18 @@ map<string, int> get_node_names(string filename) {
     string line;
     ifstream inputFile(filename.c_str());
     if (inputFile.is_open()) {
-	getline(inputFile, line);
-	char dest[1000];
-	strcpy(dest, line.c_str());
-	char* name = strtok(dest, " ,");
-	while (name != NULL) {
-	    if (nodeMap.find(name) == nodeMap.end()) {
-		nodeMap.insert(pair<string, int>(name, index));
-		index++;
-	    }
-	    name = strtok(NULL, " ,");
-	}
-	inputFile.close();
+        getline(inputFile, line);
+        char dest[1000];
+        strcpy(dest, line.c_str());
+        char* name = strtok(dest, " ,");
+        while (name != NULL) {
+            if (nodeMap.find(name) == nodeMap.end()) {
+                nodeMap.insert(pair<string, int>(name, index));
+                index++;
+            }
+            name = strtok(NULL, " ,");
+        }
+        inputFile.close();
     }
     return nodeMap;
 }
@@ -31,7 +31,7 @@ map<string, int> get_node_names(string filename) {
 int ** allocate_square_matrix(int locations) {
     int ** matrix = (int**) malloc(locations * sizeof(int*));
     for (int i = 0; i < locations; i++) {
-	matrix[i] = (int*) malloc(locations * sizeof(int));
+        matrix[i] = (int*) malloc(locations * sizeof(int));
     }
     return matrix;
 }
@@ -53,13 +53,13 @@ int** parse_line(string line, int** graph, map<string, int> nodeMap) {
     // get the neighbors
     char* neighbors = strtok(NULL, ";");
     while (neighbors != NULL) {
-	string n_name;
-	int distance;
+        string n_name;
+        int distance;
 
-	parse_node(neighbors, &n_name, &distance);
-	graph[nodeMap[name]][nodeMap[n_name]] = distance;
+        parse_node(neighbors, &n_name, &distance);
+        graph[nodeMap[name]][nodeMap[n_name]] = distance;
 
-	neighbors = strtok(NULL, ";");
+        neighbors = strtok(NULL, ";");
     }
     return graph;
 }
@@ -71,18 +71,18 @@ int** load_locations(string filename, map<string, int> nodeMap) {
     ifstream inputFile;
     inputFile.open(filename.c_str());
     if (inputFile.is_open()) {
-	getline(inputFile, line); // ignore the first line
-	
-	while(getline(inputFile, line)) {
-	    graph = parse_line(line, graph, nodeMap);
-	}
+        getline(inputFile, line); // ignore the first line
+        
+        while(getline(inputFile, line)) {
+            graph = parse_line(line, graph, nodeMap);
+        }
 
-	inputFile.close();
+        inputFile.close();
     }
 
     // make sure the diagonal is all 0
     for (int i = 0; i < nodeMap.size(); i++) {
-	graph[i][i] = 0;
+        graph[i][i] = 0;
     }
 
     return graph;
@@ -95,9 +95,17 @@ void free_graph(int** graph, int nodes) {
 
 void print_graph(int** graph, int nodes) {
     for (int i = 0; i < nodes; i++) {
-	for (int j = 0; j < nodes; j++) {
-	    printf("%d ", graph[i][j]);
-	}
-	printf("\n");
+        for (int j = 0; j < nodes; j++) {
+            printf("%d ", graph[i][j]);
+        }
+        printf("\n");
     }
+}
+
+int getTotalDistance(int** graph, int* tour, int nodes){
+    double result = graph[tour[0]][tour[nodes - 1]];
+    for(int i = 1; i < nodes; i++){
+        result += graph[tour[i-1]][tour[i]];
+    }
+    return result;
 }
