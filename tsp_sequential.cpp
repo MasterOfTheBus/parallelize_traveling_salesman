@@ -7,36 +7,36 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    int nodes;
-
-    std::map<std::string, int> nameIndexMap = get_node_names(argv[1]);
+    
 #if 0
     for (std::map<std::string, int>::iterator it = nameIndexMap.begin(); it != nameIndexMap.end(); ++it) {
     std::cout << it->first << ", " << it->second << "\n";
     }
 #endif
-    int ** graph = load_locations(argv[1], nameIndexMap);
 
-    printf("loaded graph\n");
-    int tour[nameIndexMap.size()];
-    for(int i = 0; i < nameIndexMap.size(); i++){
-        tour[i] = i;
+    Graph graph = Graph(argv[1]);
+    //graph.printDistanceMatrix();
+
+    int path[graph.getSize()];
+    for(int i = 0; i < graph.getSize(); i++){
+        path[i] = i;
     }
-    int score = getTotalDistance(graph, tour, nameIndexMap.size());;
-    cout<< score <<endl;
-    print_graph(graph, nameIndexMap.size());
-    while(next_permutation(tour, tour + nameIndexMap.size())){
-        int distance = getTotalDistance(graph, tour, nameIndexMap.size());
-        if(distance < score)
+
+    double distance = graph.getPathDistance(path);
+    cout<< "Default distance: " << distance <<endl;
+    while(next_permutation(path, path + graph.getSize())){
+        
+        double new_distance = graph.getPathDistance(path);
+        if(new_distance < distance)
         {
-            score = distance;
-            for(int i = 0; i < nameIndexMap.size(); i++){
-                cout << tour[i] << ' ';
+            distance = new_distance;
+            
+            cout << "Path: ";
+            for(int i = 0; i < graph.getSize(); i++){
+                cout << path[i] << ' ';
             }
-            cout << endl << score << endl;
+            cout << endl << "Distance: " << distance << endl;
         }
     }
-    free_graph(graph, nameIndexMap.size());
-
     return 0;
 }
