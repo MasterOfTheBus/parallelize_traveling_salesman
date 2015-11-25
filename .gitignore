@@ -1,3 +1,4 @@
 *.o
 *.swp
 tsp_sequential
+tsp_openmp
