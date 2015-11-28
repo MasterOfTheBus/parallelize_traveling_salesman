@@ -76,56 +76,61 @@ int main(int argc, char* argv[]) {
 
     } else {
 
-    vector<int> final_path;
-    Anneal annealer = Anneal(1000);
-    int iteration = 0;
-    int permutations = permute(path.size());
-    int total_iter = (permutations) / 2;
+        vector<int> final_path = path;
+	int permutations = permute(path.size());
+	int total_iter = (permutations) / 2;
 
-    srand(time(NULL));
+	srand(time(NULL));
 
-    #pragma omp parallel num_threads(thread_count)
-    {
-	#pragma omp for
-	for (int i = 0; i < total_iter; i++) {
-	    int a = rand() % graph.getSize();
-	    int b;
-	    do {
-		b = rand() % graph.getSize();
-	    } while (b == a);
+	#pragma omp parallel num_threads(thread_count)
+	{
+	    Anneal annealer = Anneal(1000);
+	
+	    vector<int> temp_arr;
+	    vector<int> local_path;
+	    double local_dist;
+	    #pragma omp critical (local_arr)
+	    {
+		temp_arr = path;
+		local_dist = distance;
+	    }
 
-	    vector<int> temp_vec;
-	    #pragma omp critical (save)
-	    temp_vec = path;
+	    for (int i = 0; i < total_iter; i++) {
+		int a = rand() % graph.getSize();
+		int b;
+		do {
+		    b = rand() % graph.getSize();
+		} while (b == a);
 
-	    int swap = temp_vec[a];
-	    temp_vec[a] = temp_vec[b];
-	    temp_vec[b] = swap;
+		int swap = temp_arr[a];
+		temp_arr[a] = temp_arr[b];
+		temp_arr[b] = swap;
 
-	    double new_dist = graph.getPathDistance(&temp_vec[0]);
+		double new_dist = graph.getPathDistance(&temp_arr[0]);
+		double difference = local_dist - new_dist;
 
-	    double difference;
-	    #pragma omp critical (update)
-	    difference = distance - new_dist;
-
-	    double thresh = annealer.get_accept_threshold(difference, i);
-	    double accept = (rand() % 100) / 100.0;
-	    if (accept < thresh) {
-		#pragma omp critical (assign)
-		{
-		    distance = new_dist;
-		    final_path = temp_vec;
+		double thresh = annealer.get_accept_threshold(difference, i);
+		double accept = (rand() % 100) / 100.0;
+		if (accept < thresh) {
+		    local_dist = new_dist;
+		    local_path = temp_arr;
 		}
 	    }
-	    #pragma omp critical (update_path)
-	    path = temp_vec;
-	}
-    }
 
-    for (int i = 0; i < final_path.size(); i++) {
-	cout << final_path[i];
-    }
-    cout << endl;
+	    #pragma omp barrier
+	    #pragma omp critical (update)
+	    {
+		if (local_dist < distance) {
+		    distance = local_dist;
+		    final_path = local_path;
+		}
+	    }
+	}
+
+	for (int i = 0; i < final_path.size(); i++) {
+	    cout << final_path[i];
+	}
+	cout << endl;
     }
 
     cout << "Distance: " << distance << endl;

@@ -6,7 +6,7 @@ Anneal::Anneal(double start_temperature) {
 }
 
 double Anneal::get_temperature(int iteration) {
-    return (temperature * (1.0 / log(iteration)));
+    return (temperature / log(iteration));
 }
 
 double Anneal::get_accept_threshold(double difference, int iteration) {
