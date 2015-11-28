@@ -1,7 +1,0 @@
-Trottier, McConnell, Burnsides, McLennan, Leacock, McIntyre
-Trottier;McConnell,15;Burnsides,30;McLennan,50;Leacock,40;McIntyre,1000
-McConnell;McLennan,46;McIntyre,900;Leacock,35;Trottier,15;Burnsides,27
-McLennan;McIntyre,700;Leacock,10;Trottier,50;Burnsides,20;McConnell,46
-Burnsides;Trottier,30;McConnell,30;McIntyre,9000;Leacock,38;McLennan,60
-McIntyre;Burnsides,9000;McLennan,700;McConnell,900;Trottier,1000;Leacock,200
-Leacock;Trottier,40;Burnsides,38;McConnell,35;McIntyre,200;McLennan,10

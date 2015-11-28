@@ -1,9 +1,21 @@
-The command is
+The commands are
 ./tsp_sequential <input file>
 
-Don't put white space between the values and the delimiters
-The format of the input file is:
+./tsp_openmp <input file> <thread numbers> [-a]
+-a: enable annealing
+
+The format of the input file is a list of the node names followed by
+their corresponding x, y coordinates on each new line:
 
 List of node names
-node name;neighbor,distance;neighbor,distance; ...
-node name: ...
+x y
+x2 y2
+...
+
+=== Annealing ===
+temperature at iteration i = temperature / scheduling_fnc
+scheduling_fnc generally has asymptotic growth eg log or an s curve
+
+p(accept) = exp( (distance - new_dist) / temp(i) )
+
+It seems like higher starting temperature requires more iterations.

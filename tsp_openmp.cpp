@@ -42,7 +42,6 @@ int main(int argc, char* argv[]) {
 	while (next_permutation(path.begin(), path.end())) {
 	    path_perms.push_back(path);
         }
-
 	int path_num = 0;
         #pragma omp parallel num_threads(thread_count)
 	{
@@ -84,7 +83,7 @@ int main(int argc, char* argv[]) {
 
 	#pragma omp parallel num_threads(thread_count)
 	{
-	    Anneal annealer = Anneal(1000);
+	    Anneal annealer = Anneal(100);
 	
 	    vector<int> temp_arr;
 	    vector<int> local_path;
