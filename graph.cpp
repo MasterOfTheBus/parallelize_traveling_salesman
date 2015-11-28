@@ -2,7 +2,8 @@
 #include <cstring>
 #include <fstream>
 #include <stdlib.h>
-#include <math.h> 
+#include <math.h>
+#include <omp.h>
 #include "graph.hpp"
 
 using namespace std;
@@ -25,7 +26,7 @@ double ** allocateSquareMatrix(int size) {
     return matrix;
 }
 
-Graph::Graph(string filename){
+Graph::Graph(string filename, bool parallel, int threads){
     int index = 0;
     string line;
     ifstream inputFile(filename.c_str());
@@ -58,17 +59,36 @@ Graph::Graph(string filename){
     }
     inputFile.close();
 
-    for (int i = 0; i < m_size; ++i)
-    {
-        for (int j = 0; j < m_size; ++j)
-        {
-            if(i == j)
-                m_distanceMatrix[i][j] = 0.0;
-            else{
-                m_distanceMatrix[i][j] = m_vertices[i].getDistanceTo(m_vertices[j]);
-            }
-        }
+    if (parallel) {
+	#pragma omp parallel num_threads(threads)
+	{
+	    #pragma omp for
+	    for (int i = 0; i < m_size; ++i)
+	    {
+		for (int j = 0; j < m_size; ++j)
+		{
+		    if(i == j)
+			m_distanceMatrix[i][j] = 0.0;
+		    else{
+			m_distanceMatrix[i][j] = m_vertices[i].getDistanceTo(m_vertices[j]);
+		    }
+		}
+	    }
+	}
+    } else {
+	for (int i = 0; i < m_size; ++i)
+	{
+	    for (int j = 0; j < m_size; ++j)
+	    {
+		if(i == j)
+		    m_distanceMatrix[i][j] = 0.0;
+		else{
+		    m_distanceMatrix[i][j] = m_vertices[i].getDistanceTo(m_vertices[j]);
+		}
+	    }
+	}
     }
+
 }
 
 Graph::~Graph(){

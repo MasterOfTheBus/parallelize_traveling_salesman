@@ -3,16 +3,14 @@
 #include <stdio.h>
 #include <iostream>
 #include <algorithm>    // std::next_permutation
+#include <sys/time.h>
 
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    
-#if 0
-    for (std::map<std::string, int>::iterator it = nameIndexMap.begin(); it != nameIndexMap.end(); ++it) {
-    std::cout << it->first << ", " << it->second << "\n";
-    }
-#endif
+
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
 
     Graph graph = Graph(argv[1]);
     //graph.printDistanceMatrix();
@@ -38,5 +36,9 @@ int main(int argc, char* argv[]) {
             cout << endl << "Distance: " << distance << endl;
         }
     }
+
+    gettimeofday(&end, NULL);
+    cout << (end.tv_sec * 1000000 + end.tv_usec) - (start.tv_sec * 1000000 + start.tv_usec) << " microseconds" << endl;
+
     return 0;
 }

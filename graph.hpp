@@ -22,7 +22,7 @@ private:
     double** m_distanceMatrix;
     map<string, int> m_nodeMap;
 public:
-    Graph(string filename);
+    Graph(string filename, bool parallel = false, int threads = 1);
     ~Graph();
     int getSize() { return m_size; }
     double** getDistanceMatrix() { return m_distanceMatrix; }

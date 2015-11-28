@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <omp.h>
+#include <sys/time.h>
 
 using namespace std;
 
@@ -11,11 +12,15 @@ int permute(int num);
 
 int main(int argc, char* argv[]) {
 
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+
     int loop_counter = -1;
     int stop_cond = 0;
     int thread_counter, thread_stop;
 
-    Graph graph = Graph(argv[1]);
+    int thread_count = atoi(argv[2]);
+    Graph graph = Graph(argv[1], true, thread_count);
 
     vector<int> path;
     path.reserve(graph.getSize());
@@ -25,7 +30,6 @@ int main(int argc, char* argv[]) {
 
     double distance = graph.getPathDistance(&path[0]);
 
-    int thread_count = atoi(argv[2]);
 #if 0 
     int chunksize = permute(graph.getSize()) / thread_count;
     vector<int> fastest;
@@ -108,6 +112,9 @@ int main(int argc, char* argv[]) {
 
 #endif
     cout << "Distance: " << distance << endl;
+
+    gettimeofday(&end, NULL);
+    cout << (end.tv_sec * 1000000 + end.tv_usec) - (start.tv_sec * 1000000 + start.tv_usec) << " microseconds" << endl;
     return 0;
 }
 
