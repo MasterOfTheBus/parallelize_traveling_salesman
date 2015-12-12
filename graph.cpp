@@ -26,6 +26,10 @@ double ** allocateSquareMatrix(int size) {
     return matrix;
 }
 
+Graph::Graph() {
+    m_size = 0;
+}
+
 Graph::Graph(string filename, bool parallel, int threads){
     int index = 0;
     string line;

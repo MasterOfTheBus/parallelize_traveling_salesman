@@ -1,4 +1,9 @@
 *.o
 *.swp
+*.save
+*.diff
+results/
 tsp_sequential
 tsp_openmp
+tsp_branch
+tsp_mpi_branch
