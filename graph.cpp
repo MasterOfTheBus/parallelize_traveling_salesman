@@ -40,19 +40,8 @@ Graph::Graph(string filename, bool parallel, int threads){
     ifstream inputFile(filename.c_str());
     if (inputFile.is_open()) {
         getline(inputFile, line);
-        char dest[1000];
-        strcpy(dest, line.c_str());
-        char* name = strtok(dest, " ,");
-        while (name != NULL) {
-            if (m_nodeMap.find(name) == m_nodeMap.end()) {
-                m_nodeMap.insert(pair<string, int>(name, index));
-                index++;
-            }
-            name = strtok(NULL, " ,");
-        }
+        m_size = std::stoi(line);
     }
-
-    m_size = m_nodeMap.size();
 
     m_vertices = new Vertex[m_size];
     m_distanceMatrix = allocateSquareMatrix(m_size);

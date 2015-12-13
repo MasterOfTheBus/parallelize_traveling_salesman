@@ -20,14 +20,12 @@ private:
     int m_size;
     Vertex *m_vertices;
     double** m_distanceMatrix;
-    map<string, int> m_nodeMap;
 public:
     Graph();
     Graph(string filename, bool parallel = false, int threads = 1);
     ~Graph();
     int getSize() { return m_size; }
     double** getDistanceMatrix() { return m_distanceMatrix; }
-    map<string, int> getNodeMap() { return m_nodeMap; }
     double getPathDistance(int *path);
     void printDistanceMatrix();
 
