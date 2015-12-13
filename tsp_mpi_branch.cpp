@@ -78,7 +78,7 @@ void free_matrix(double** matrix, int size) {
 int main(int argc, char* argv[]) {
     int size, rank, graph_size;
     double** matrix;
-    double shortest;
+    double shortest = numeric_limits<double>::max();
     struct timeval start, end;
     Graph* graph;
 
@@ -90,8 +90,7 @@ int main(int argc, char* argv[]) {
         gettimeofday(&start, NULL);
 
         graph = new Graph(argv[1]);
-        graph->printDistanceMatrix();
-        cout << endl;
+    //    graph->printDistanceMatrix();
         graph_size = graph->getSize();
 	    matrix = graph->getDistanceMatrix();
     }
@@ -101,15 +100,6 @@ int main(int argc, char* argv[]) {
     
     MPI_Bcast(&(matrix[0][0]), graph_size * graph_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     
-    if (rank == 2) {
-        for (int i = 0; i < graph_size; i++) {
-            for (int j = 0; j < graph_size; j++) {
-                cout << matrix[i][j] << " ";
-            }
-            cout << endl;
-        }
-    }
-
     set<int> vertices;
     for (int i = 0; i < graph_size; i++) {
         vertices.insert(i);
@@ -130,6 +120,9 @@ int main(int argc, char* argv[]) {
             cout << distance << " calculated " << i << endl;
             if (distance < shortest) shortest = distance;
         }
+        double distance = graph->getPathDistance(&path_vec[0]);
+        cout << distance << " rank " << rank << endl;
+        if (distance < shortest) shortest = distance;
     }
  
     //distance = graph.getPathDistance(&path_vec[0]);
