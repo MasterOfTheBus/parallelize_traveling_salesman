@@ -78,9 +78,9 @@ void free_matrix(double** matrix, int size) {
 int main(int argc, char* argv[]) {
     int size, rank, graph_size;
     double** matrix;
-    double shortest = numeric_limits<double>::max();
+    double shortest;
     struct timeval start, end;
-    Graph graph;
+    Graph* graph;
 
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -89,9 +89,11 @@ int main(int argc, char* argv[]) {
     if (rank == 0) {
         gettimeofday(&start, NULL);
 
-        graph = Graph(argv[1]);
-        graph_size = graph.getSize();
-	    matrix = graph.getDistanceMatrix();
+        graph = new Graph(argv[1]);
+        graph->printDistanceMatrix();
+        cout << endl;
+        graph_size = graph->getSize();
+	    matrix = graph->getDistanceMatrix();
     }
 
     MPI_Bcast(&graph_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
@@ -99,6 +101,15 @@ int main(int argc, char* argv[]) {
     
     MPI_Bcast(&(matrix[0][0]), graph_size * graph_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     
+    if (rank == 2) {
+        for (int i = 0; i < graph_size; i++) {
+            for (int j = 0; j < graph_size; j++) {
+                cout << matrix[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+
     set<int> vertices;
     for (int i = 0; i < graph_size; i++) {
         vertices.insert(i);
@@ -115,7 +126,7 @@ int main(int argc, char* argv[]) {
             int from_proc[graph_size];
             MPI_Status status;
             MPI_Recv(from_proc, graph_size, MPI_INT, i, i, MPI_COMM_WORLD, &status);
-            double distance = graph.getPathDistance(from_proc);
+            double distance = graph->getPathDistance(from_proc);
             cout << distance << " calculated " << i << endl;
             if (distance < shortest) shortest = distance;
         }

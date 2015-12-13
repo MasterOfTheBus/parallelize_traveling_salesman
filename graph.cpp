@@ -19,10 +19,14 @@ double Vertex::getDistanceTo(Vertex v){
 }
 
 double ** allocateSquareMatrix(int size) {
-    double ** matrix = (double**) malloc(size * sizeof(double*));
+/*    double ** matrix = (double**) malloc(size * sizeof(double*));
     for (int i = 0; i < size; i++) {
         matrix[i] = (double*) malloc(size * sizeof(double));
-    }
+    }*/
+    double **matrix = new double*[size];
+    double *data = new double[size * size];
+    for (int i = 0; i < size; i++)
+        matrix[i] = &(data[size *i]);
     return matrix;
 }
 
@@ -97,9 +101,11 @@ Graph::Graph(string filename, bool parallel, int threads){
 
 Graph::~Graph(){
     delete[] m_vertices;
-    for(int i = 0; i < m_size; ++i){
+    /*for(int i = 0; i < m_size; ++i){
         delete[] m_distanceMatrix[i];
     }
+    delete[] m_distanceMatrix;*/
+    delete[] m_distanceMatrix[0];
     delete[] m_distanceMatrix;
 }
 

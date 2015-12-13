@@ -53,6 +53,7 @@ int main(int argc, char* argv[]) {
     gettimeofday(&start, NULL);
 
     Graph graph = Graph(argv[1]);
+    graph.printDistanceMatrix();
 
     bool parallel = false;
     int threads = 1;
