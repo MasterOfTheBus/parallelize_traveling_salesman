@@ -15,6 +15,9 @@ tsp_sequential: tsp_sequential.o graph.o
 sa_sequential: sa_sequential.o graph.o
 	    g++ -std=c++11 -g -fopenmp -o sa_sequential sa_sequential.o graph.o
 
+sa_openmp: sa_openmp.o graph.o
+	    g++ -std=c++11 -g -fopenmp -o sa_openmp sa_openmp.o graph.o
+
 tsp_mpi_branch.o: tsp_mpi_branch.cpp graph.hpp
 		mpiCC -std=c++11 -g -fopenmp -c tsp_mpi_branch.cpp
 
@@ -29,6 +32,9 @@ tsp_sequential.o: tsp_sequential.cpp graph.hpp
 
 sa_sequential.o: sa_sequential.cpp graph.hpp
     g++ -std=c++11 -g -c sa_sequential.cpp
+
+sa_openmp.o: sa_openmp.cpp graph.hpp
+    g++ -std=c++11 -g -c sa_openmp.cpp
 
 graph.o: graph.cpp graph.hpp
 	    g++ -std=c++11 -g -fopenmp -c graph.cpp
