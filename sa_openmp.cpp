@@ -67,11 +67,9 @@ int main(int argc, char* argv[]) {
 
         double currentDistance = distance;
         int iteration = 0;
-        int success_count = 100;
         
         while(temperature > 0.001){
             iteration++;
-            success_count = 0;
             for (int i = 0; i < 2000; ++i)
             {
                 for(int i = 0; i < graph.getSize(); i++){
@@ -87,27 +85,20 @@ int main(int argc, char* argv[]) {
                 double newDistance = graph.getPathDistance(path);
 
                 if(acceptanceProbability(currentDistance, newDistance, temperature) > rand()/RAND_MAX){
-                    success_count++;
                     currentDistance = newDistance;
                     for(int i = 0; i < graph.getSize(); ++i){
                         currentPath[i] = path[i];
                     }
                 }
                 if(distance > currentDistance){
-                    success_count+=10;
                     distance = currentDistance;
-                    //cout << "Path: ";
                     for(int i = 0; i < graph.getSize(); ++i){
                         bestPath[i] = currentPath[i];
-                        //cout << bestPath[i] << ' ';
                     }
-                    //cout << endl << "Distance: " << distance << endl;
                 }
 
             }
-            //cout << success_count << endl;
             temperature *= 1-coolingRate;
-            //temperature = 10.0/(1+200*log10(1+iteration));
             cout << temperature << endl;
         }
         omp_set_lock(&writelock);
